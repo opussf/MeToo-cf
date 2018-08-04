@@ -1,0 +1,3 @@
+<Bindings>
+	<Binding name="METOOBUTTON" header="METOOBUTTONS">MeToo.Command()</Binding>
+</Bindings>
