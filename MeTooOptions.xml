@@ -79,6 +79,18 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<CheckButton name="$parent_MountSuccessEmoteToTarget" inherits="MeTooOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_MountSuccessEmoteTestButton" relativePoint="RIGHT">
+						<Offset><AbsDimension x="10" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>self.tooltip = "Emote the target";</OnLoad>
+					<OnShow>MeToo.OptionsPanel_CheckButton_OnShow( self, "mountSuccess_useTarget", "Emote the target" );</OnShow>
+					<PostClick>MeToo.OptionsPanel_CheckButton_PostClick( self, "mountSuccess_useTarget" )</PostClick>
+				</Scripts>
+			</CheckButton>
 
 			<CheckButton name="$parent_MountFailureDoEmote" inherits="MeTooOptionsCheckButtonTemplate">
 				<Anchors>
@@ -118,6 +130,18 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<CheckButton name="$parent_MountFailureEmoteToTarget" inherits="MeTooOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_MountFailureEmoteTestButton" relativePoint="RIGHT">
+						<Offset><AbsDimension x="10" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>self.tooltip = "Emote the target";</OnLoad>
+					<OnShow>MeToo.OptionsPanel_CheckButton_OnShow( self, "mountFailure_useTarget", "Emote the target" );</OnShow>
+					<PostClick>MeToo.OptionsPanel_CheckButton_PostClick( self, "mountFailure_useTarget" )</PostClick>
+				</Scripts>
+			</CheckButton>
 
 			<!--  Companions -->
 			<CheckButton name="$parent_CompanionSuccessDoEmote" inherits="MeTooOptionsCheckButtonTemplate">

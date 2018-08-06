@@ -42,7 +42,7 @@ function MeToo.ADDON_LOADED()
 	MeToo.OptionsPanel_Reset()
 end
 function MeToo.NEW_MOUNT_ADDED()
-	print( "NEW_MOUNT_ADDED" )
+	--print( "NEW_MOUNT_ADDED" )
 	MeToo.BuildMountSpells()
 end
 ------------
@@ -137,7 +137,7 @@ function MeToo.PerformMatch()
 
 				if( isUsable ) then
 					if( MeToo_options.mountSuccess_doEmote and strlen( MeToo_options.mountSuccess_emote ) > 0 ) then
-						DoEmote( MeToo_options.mountSuccess_emote, "player" )
+						DoEmote( MeToo_options.mountSuccess_emote, MeToo_options.mountSuccess_useTarget and "target" or "player" )
 					end
 					if( not IsFlying() ) then  -- only do this if you are NOT flying...
 						C_MountJournal.SummonByID( mountSpell )
@@ -146,7 +146,7 @@ function MeToo.PerformMatch()
 					end
 				else
 					if( MeToo_options.mountFailure_doEmote and strlen( MeToo_options.mountFailure_emote ) > 0 ) then
-						DoEmote( MeToo_options.mountFailure_emote, "player" )
+						DoEmote( MeToo_options.mountFailure_emote, MeToo_options.mountFailure_useTarget and "target" or "player" )
 					end
 				end
 			end

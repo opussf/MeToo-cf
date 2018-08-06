@@ -1,8 +1,10 @@
 MeToo.defaultOptions = {
 	["mountSuccess_doEmote"] = true,
 	["mountSuccess_emote"] = "CHEER",
+	["mountSuccess_useTarget"] = nil,
 	["mountFailure_doEmote"] = true,
 	["mountFailure_emote"] = "CRY",
+	["mountFailure_useTarget"] = nil,
 	["companionSuccess_doEmote"] = true,
 	["companionSuccess_emote"] = "CHEER",
 	["companionFailure_doEmote"] = true,
@@ -41,9 +43,12 @@ function MeToo.OptionsPanel_Refresh()
 	MeTooOptionsFrame_MountSuccessDoEmote:SetChecked( MeToo_options["mountSuccess_doEmote"] )
 	MeTooOptionsFrame_MountSuccessEmoteEditBox:SetText( MeToo_options["mountSuccess_emote"] )
 	MeTooOptionsFrame_MountSuccessEmoteEditBox:SetCursorPosition(0)
+	MeTooOptionsFrame_MountSuccessEmoteToTarget:SetChecked( MeToo_options["mountSuccess_useTarget"] )
+
 	MeTooOptionsFrame_MountFailureDoEmote:SetChecked( MeToo_options["mountFailure_doEmote"] )
 	MeTooOptionsFrame_MountFailureEmoteEditBox:SetText( MeToo_options["mountFailure_emote"] )
 	MeTooOptionsFrame_MountFailureEmoteEditBox:SetCursorPosition(0)
+	MeTooOptionsFrame_MountFailureEmoteToTarget:SetChecked( MeToo_options["mountFailure_useTarget"] )
 
 	MeTooOptionsFrame_CompanionSuccessDoEmote:SetChecked( MeToo_options["companionSuccess_doEmote"] )
 	MeTooOptionsFrame_CompanionSuccessEmoteEditBox:SetText( MeToo_options["companionSuccess_emote"] )
