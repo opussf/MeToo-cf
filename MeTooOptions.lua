@@ -8,10 +8,16 @@ MeToo.defaultOptions = {
 	["companionSuccess_doEmote"] = true,
 	["companionSuccess_emote"] = "CHEER",
 	["companionFailure_doEmote"] = true,
-	["companionFailure_emote"] = "CRY"
+	["companionFailure_emote"] = "CRY",
+	["daysTrackWanted"] = 7
+
 }
 MeToo_options = {}
-
+function MeToo.UpdateOptions()
+	for k,v in pairs( MeToo.defaultOptions ) do
+		MeToo_options[k] = MeToo_options[k] or v
+	end
+end
 function MeToo.OptionsPanel_Reset()
 	-- Called from Addon_loaded
 	-- MeToo.Print( "Reset" )
@@ -69,9 +75,7 @@ function MeToo.OptionsPanel_OnLoad( panel )
 
 	InterfaceOptions_AddCategory( panel )
 	InterfaceAddOnsList_Update()
-	for k,v in pairs( MeToo.defaultOptions ) do
-		MeToo_options[k] = MeToo_options[k] or v
-	end
+	MeToo.UpdateOptions()
 end
 -----------------
 function MeToo.OptionsPanel_CheckButton_OnShow( self, option, text )

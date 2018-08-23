@@ -19,12 +19,14 @@ BINDING_NAME_METOOBUTTON = "MeToo!"
 
 MeToo = {}
 MeToo.knownEmotes = {}
+MeToo_mountList = {}
+MeToo_companionList = {}
 
 function MeToo.Print( msg, showName)
 	-- print to the chat frame
 	-- set showName to false to suppress the addon name printing
 	if (showName == nil) or (showName) then
-		msg = COLOR_PURPLE..METOO_MSG_ADDONNAME.."> "..COLOR_END..msg
+		msg = COLOR_BLUE..METOO_MSG_ADDONNAME.."> "..COLOR_END..msg
 	end
 	DEFAULT_CHAT_FRAME:AddMessage( msg )
 end
@@ -34,12 +36,18 @@ function MeToo.OnLoad()
 	SlashCmdList["METOO"] = function( msg ) MeToo.Command( msg ); end
 	MeToo_Frame:RegisterEvent( "NEW_MOUNT_ADDED" )
 	MeToo_Frame:RegisterEvent( "ADDON_LOADED" )
+	MeToo_Frame:RegisterEvent( "VARIABLES_LOADED" )
 end
 function MeToo.ADDON_LOADED()
 	MeToo_Frame:UnregisterEvent( "ADDON_LOADED" )
 	MeToo.BuildEmoteList()
+	MeToo.RemoveFromLists()
 
 	MeToo.OptionsPanel_Reset()
+end
+function MeToo.VARIABLES_LOADED()
+	MeToo_Frame:UnregisterEvent( "VARIABLES_LOADED" )
+	MeToo.UpdateOptions()
 end
 function MeToo.NEW_MOUNT_ADDED()
 	--print( "NEW_MOUNT_ADDED" )
@@ -84,11 +92,17 @@ function MeToo.PerformMatch()
 
 		isOwned = ( C_PetJournal.GetOwnedBattlePetString( speciesID ) and true or nil )
 		-- returns a string of how many you have or nil if you have none.   Convert this to 1 - nil for
+		-- C_PetJournal.GetNumCollectedInfo(speciesId)  -- returns have/max
+
+		petName = C_PetJournal.GetPetInfoBySpeciesID( speciesID )  -- get the petName
+		-- MeToo_companionList[time()] = petName  -- because of the BattlePetGUID included in the link....
+		-- the API will not provide a link from the speciesID...  Even though the main link is:
+		-- |c........|Hbattlepet:<speciesID>:...junk...:petGUID\h[<petName>]|h|r
+		-- "|cff0070dd|Hbattlepet:193:7:3:464:96:68:BattlePet-0-00000492C932|h[Giant Sewer Rat]|h|r"
+		-- not sure what would happen if I crafted a 'fake' link....
 
 		if isOwned then
-			petName = C_PetJournal.GetPetInfoBySpeciesID( speciesID )  -- get the petName
-			_, petID = C_PetJournal.FindPetIDByName( petName )  -- == speciesID from the petName
-
+			_, petID = C_PetJournal.FindPetIDByName( petName )  -- == petID (which is YOUR petID) from the petName
 			currentPet = C_PetJournal.GetSummonedPetGUID()  -- get your current pet
 
 			if( currentPet ) then -- you have one summoned
@@ -116,6 +130,8 @@ function MeToo.PerformMatch()
 			if( MeToo_options.companionFailure_doEmote and strlen( MeToo_options.companionFailure_emote ) > 0 ) then
 				DoEmote( MeToo_options.companionFailure_emote, "player" )
 			end
+			MeToo.Print( "Pet name: "..petName )
+			MeToo_companionList[time()] = petName
 		end
 	elseif( UnitIsPlayer( "target" ) ) then
 		_, unitSpeed = GetUnitSpeed( "target" )
@@ -132,6 +148,8 @@ function MeToo.PerformMatch()
 
 			if( theirMountID and theirMountID ~= myMountID ) then  -- not the same mount
 				mountSpell = C_MountJournal.GetMountFromSpell( theirMountID )
+				mountLink = GetSpellLink( theirMountID )
+				MeToo.Print( "Mount Link: "..mountLink )
 
 				_, _, _, _, isUsable = C_MountJournal.GetMountInfoByID( mountSpell ) -- isUsable = can mount
 
@@ -148,11 +166,59 @@ function MeToo.PerformMatch()
 					if( MeToo_options.mountFailure_doEmote and strlen( MeToo_options.mountFailure_emote ) > 0 ) then
 						DoEmote( MeToo_options.mountFailure_emote, MeToo_options.mountFailure_useTarget and "target" or "player" )
 					end
+					MeToo_mountList[time()] = mountLink
 				end
 			end
 		end
 	else
 		-- MeToo.Print( "Target is NOT a battle pet or player." )
+	end
+end
+function MeToo.ShowList( listTypeIn )
+	-- type is "companion" or "mount"
+	local listType = string.lower( listTypeIn )
+	--print( "ShowList( "..listType.." )" )
+	local workingList = ( listType == "companion" and MeToo_companionList or MeToo_mountList )
+	local displayList = {}
+	if( workingList ) then
+		MeToo.Print( ("Saw it... Want it... (%s list)"):format( ( listType == "companion" and listType or "mount" ) ) )
+		for ts, name in pairs( workingList ) do
+			displayList[ name ] = displayList[ name ] and displayList[ name ] + 1 or 1
+		end
+		for name, count in pairs( displayList ) do
+			MeToo.Print( ("%s seen %d time%s."):format( name, count, ( count > 1 and "s" or "" ) ), false )
+		end
+	end
+	if( listTypeIn == "" ) then
+		MeToo.ShowList( "companion" )
+	end
+end
+function MeToo.ClearList( listTypeIn )
+	local listType = string.lower( listTypeIn )
+	--print( "ClearList( "..listType.." )" )
+	local listType = ( listType == "companion" and "companion" or "mount" )
+	if( listType == "mount" ) then
+		MeToo_mountList = {}
+		MeToo.Print( "Clearing mount list." )
+	elseif( listType == "companion" ) then
+		MeToo_companionList = {}
+		MeToo.Print( "Clearing companion list." )
+	end
+	if( listTypeIn == "" ) then
+		MeToo.ClearList( "companion" )
+	end
+end
+function MeToo.RemoveFromLists( daysIn )
+	local expireBefore = time() - ( (daysIn or ( MeToo_options.daysTrackWanted or MeToo.defaultOptions.daysTrackWanted ) ) * 86400 )
+	for ts in pairs( MeToo_companionList ) do
+		if( ts < expireBefore ) then
+			MeToo_companionList[ts] = nil
+		end
+	end
+	for ts in pairs( MeToo_mountList ) do
+		if( ts < expireBefore ) then
+			MeToo_mountList[ts] = nil
+		end
 	end
 end
 -----
@@ -194,5 +260,13 @@ MeToo.commandList = {
 	["options"] = {
 		["func"] = function() InterfaceOptionsFrame_OpenToCategory( METOO_MSG_ADDONNAME ) end,
 		["help"] = { "", "Open the options panel." }
+	},
+	["list"] = {
+		["func"] = MeToo.ShowList,
+		["help"] = { "<mount | companion>", "Show a list of mounts or companions you were unable to match." },
+	},
+	["clear"] = {
+		["func"] = MeToo.ClearList,
+		["help"] = { "<mount | companion>", "Clear wanted mounts or companions list" },
 	},
 }
