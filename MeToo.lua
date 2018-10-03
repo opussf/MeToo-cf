@@ -121,14 +121,14 @@ function MeToo.PerformMatch()
 				-- or current pet, and species do not match
 				C_PetJournal.SummonPetByGUID( petID )
 				if( MeToo_options.companionSuccess_doEmote and strlen( MeToo_options.companionSuccess_emote ) > 0 ) then
-					DoEmote( MeToo_options.companionSuccess_emote, "player" )
+					DoEmote( MeToo_options.companionSuccess_emote, (not MeToo_options.companionSuccess_useTarget) and "player" or nil )
 				end
 			else
 				--MeToo.Print( "Pets are the same" )
 			end
 		else
 			if( MeToo_options.companionFailure_doEmote and strlen( MeToo_options.companionFailure_emote ) > 0 ) then
-				DoEmote( MeToo_options.companionFailure_emote, "player" )
+				DoEmote( MeToo_options.companionFailure_emote, (not MeToo_options.companionFailure_useTarget) and "player" or nil )
 			end
 			MeToo.Print( "Pet name: "..petName )
 			MeToo_companionList[time()] = petName
