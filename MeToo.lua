@@ -41,13 +41,12 @@ end
 function MeToo.ADDON_LOADED()
 	MeToo_Frame:UnregisterEvent( "ADDON_LOADED" )
 	MeToo.BuildEmoteList()
-	MeToo.RemoveFromLists()
-
-	MeToo.OptionsPanel_Reset()
 end
 function MeToo.VARIABLES_LOADED()
 	MeToo_Frame:UnregisterEvent( "VARIABLES_LOADED" )
+	MeToo.RemoveFromLists()
 	MeToo.UpdateOptions()
+	MeToo.OptionsPanel_Reset()
 end
 function MeToo.NEW_MOUNT_ADDED()
 	--print( "NEW_MOUNT_ADDED" )

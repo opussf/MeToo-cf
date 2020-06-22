@@ -17,7 +17,7 @@ MeToo.defaultOptions = {
 MeToo_options = {}
 function MeToo.UpdateOptions()
 	for k,v in pairs( MeToo.defaultOptions ) do
-		MeToo_options[k] = MeToo_options[k] or v
+		MeToo_options[k] = ( MeToo_options[k] == nil and v or MeToo_options[k] )
 	end
 end
 function MeToo.OptionsPanel_Reset()
