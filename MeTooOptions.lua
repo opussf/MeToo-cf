@@ -79,7 +79,7 @@ function MeToo.OptionsPanel_OnLoad( panel )
 	panel.refresh = MeToo.OptionsPanel_Refresh
 
 	InterfaceOptions_AddCategory( panel )
-	InterfaceAddOnsList_Update()
+	--InterfaceAddOnsList_Update()
 	MeToo.UpdateOptions()
 end
 -----------------
