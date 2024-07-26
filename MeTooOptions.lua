@@ -31,7 +31,7 @@ function MeToo.OptionsPanel_OKAY()
 end
 function MeToo.OptionsPanel_Cancel()
 	-- reset to temp and update the UI
-	--MeToo.Print( "Options_Panel_Cancel" )
+	-- MeToo.Print( "Options_Panel_Cancel" )
 	if MeToo.oldValues then
 		for key,val in pairs( MeToo.oldValues ) do
 			MeToo_options[key] = val
@@ -40,14 +40,14 @@ function MeToo.OptionsPanel_Cancel()
 	MeToo.oldValues = nil
 end
 function MeToo.OptionsPanel_Default()
-	--MeToo.Print("Default")
+	-- MeToo.Print("Default")
 	for k,v in pairs( MeToo.defaultOptions ) do
 		MeToo_options[k] = v
 	end
 end
 function MeToo.OptionsPanel_Refresh()
 	-- set the drop down values here...  Maybe more?
-	--MeToo.Print( "OptionsPanel_Refresh" )
+	-- MeToo.Print( "OptionsPanel_Refresh" )
 	MeTooOptionsFrame_MountSuccessDoEmote:SetChecked( MeToo_options["mountSuccess_doEmote"] )
 	MeTooOptionsFrame_MountSuccessEmoteEditBox:SetText( MeToo_options["mountSuccess_emote"] )
 	MeTooOptionsFrame_MountSuccessEmoteEditBox:SetCursorPosition(0)
@@ -71,15 +71,22 @@ end
 function MeToo.OptionsPanel_OnLoad( panel )
 	--MeToo.Print( "OptionsPanel_OnLoad" )
 	panel.name = "MeToo"
-	MeTooOptionsFrame_Title:SetText( METOO_MSG_ADDONNAME.." "..METOO_MSG_VERSION )
+	MeTooOptionsFrame_Title:SetText( METOO_MSG_ADDONNAME.." v"..METOO_MSG_VERSION )
 	-- buttons
-	panel.okay = MeToo.OptionsPanel_OKAY
+	--panel.okay = MeToo.OptionsPanel_OKAY
 	panel.cancel = MeToo.OptionsPanel_Cancel
-	panel.default = MeToo.OptionsPanel_Default
-	panel.refresh = MeToo.OptionsPanel_Refresh
+	--panel.default = MeToo.OptionsPanel_Default
+	--panel.refresh = MeToo.OptionsPanel_Refresh
 
-	InterfaceOptions_AddCategory( panel )
-	--InterfaceAddOnsList_Update()
+	-- These NEED to be set
+	panel.OnCommit = MeToo.OptionsPanel_OKAY
+	panel.OnDefault = MeToo.OptionsPanel_Default
+	panel.OnRefresh = MeToo.OptionsPanel_Refresh
+
+	-- Register Options frame
+	local category, layout = Settings.RegisterCanvasLayoutCategory( panel, panel.name )
+	panel.category = category
+	Settings.RegisterAddOnCategory(category)
 	MeToo.UpdateOptions()
 end
 -----------------

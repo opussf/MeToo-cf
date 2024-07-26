@@ -149,7 +149,7 @@ function MeToo.PerformMatch()
 
 			if( theirMountID and theirMountID ~= myMountID ) then  -- not the same mount
 				mountSpell = C_MountJournal.GetMountFromSpell( theirMountID )
-				mountLink = GetSpellLink( theirMountID )
+				mountLink = C_Spell.GetSpellLink( theirMountID )
 				MeToo.Print( "Mount Link: "..mountLink )
 
 				_, _, _, _, isUsable = C_MountJournal.GetMountInfoByID( mountSpell ) -- isUsable = can mount
@@ -259,7 +259,7 @@ MeToo.commandList = {
 		["help"] = { "", "Print this help."}
 	},
 	["options"] = {
-		["func"] = function() InterfaceOptionsFrame_OpenToCategory( METOO_MSG_ADDONNAME ) end,
+		["func"] = function() Settings.OpenToCategory( MeTooOptionsFrame.category:GetID() ) end,
 		["help"] = { "", "Open the options panel." }
 	},
 	["list"] = {
