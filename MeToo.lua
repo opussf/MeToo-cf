@@ -1,19 +1,19 @@
-METOO_SLUG, MeToo = ...
-METOO_MSG_ADDONNAME = GetAddOnMetadata( METOO_SLUG, "Title" )
-METOO_MSG_VERSION   = GetAddOnMetadata( METOO_SLUG, "Version" )
-METOO_MSG_AUTHOR    = GetAddOnMetadata( METOO_SLUG, "Author" )
+METOO_SLUG, MeToo   = ...
+METOO_MSG_ADDONNAME = C_AddOns.GetAddOnMetadata( METOO_SLUG, "Title" )
+METOO_MSG_VERSION   = C_AddOns.GetAddOnMetadata( METOO_SLUG, "Version" )
+METOO_MSG_AUTHOR    = C_AddOns.GetAddOnMetadata( METOO_SLUG, "Author" )
 
 -- Colours
-COLOR_RED = "|cffff0000";
-COLOR_GREEN = "|cff00ff00";
-COLOR_BLUE = "|cff0000ff";
-COLOR_PURPLE = "|cff700090";
-COLOR_YELLOW = "|cffffff00";
-COLOR_ORANGE = "|cffff6d00";
-COLOR_GREY = "|cff808080";
-COLOR_GOLD = "|cffcfb52b";
-COLOR_NEON_BLUE = "|cff4d4dff";
-COLOR_END = "|r";
+COLOR_RED = "|cffff0000"
+COLOR_GREEN = "|cff00ff00"
+COLOR_BLUE = "|cff0000ff"
+COLOR_PURPLE = "|cff700090"
+COLOR_YELLOW = "|cffffff00"
+COLOR_ORANGE = "|cffff6d00"
+COLOR_GREY = "|cff808080"
+COLOR_GOLD = "|cffcfb52b"
+COLOR_NEON_BLUE = "|cff4d4dff"
+COLOR_END = "|r"
 
 BINDING_HEADER_METOOBUTTONS = "MeToo Bindings"
 BINDING_NAME_METOOBUTTON = "MeToo!"
@@ -79,15 +79,15 @@ function MeToo.GetMountID( unit )
 	-- return the current mount ID...
 	-- match this against the mounts you know.
 	for an=1,40 do  -- scan ALL of the auras...  :(
-		aName, _, aIcon, _, aType, _, _, _, _, aID = UnitAura( unit, an )
-		if( aName and MeToo.mountSpells[aID] and MeToo.mountSpells[aID] == aName ) then
-			--print( unit.." is on: "..aName )
-			return aID, aName
+		auraData = C_UnitAuras.GetAuraDataByIndex( unit, an )
+		if( auraData and MeToo.mountSpells[auraData.spellId] and MeToo.mountSpells[auraData.spellId] == auraData.name ) then
+			--print( unit.." is on: "..auraData.name )
+			return auraData.spellId, auraData.name
 		end
 	end
 end
 function MeToo.PerformMatch()
-	if( UnitIsBattlePetCompanion( "target" ) ) then  -- target is battle pet
+	if( UnitIsBattlePet( "target" ) ) then  -- target is battle pet
 		speciesID = UnitBattlePetSpeciesID( "target" )
 		petType = UnitBattlePetType( "target" )
 
