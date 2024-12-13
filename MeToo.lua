@@ -86,6 +86,14 @@ function MeToo.GetMountID( unit )
 		end
 	end
 end
+function MeToo.DoEmote( emote, target )
+	-- Wrapper for DoEmote.
+	-- Allow throttling of emotes from MeToo
+	if not MeToo.lastEmoteTS or MeToo.lastEmoteTS < time() - 1 then
+		DoEmote( emote, target )
+		MeToo.lastEmoteTS = time()
+	end
+end
 function MeToo.PerformMatch()
 	if( UnitIsBattlePet( "target" ) ) then  -- target is battle pet
 		speciesID = UnitBattlePetSpeciesID( "target" )
@@ -122,14 +130,14 @@ function MeToo.PerformMatch()
 				-- or current pet, and species do not match
 				C_PetJournal.SummonPetByGUID( petID )
 				if( MeToo_options.companionSuccess_doEmote and strlen( MeToo_options.companionSuccess_emote ) > 0 ) then
-					DoEmote( MeToo_options.companionSuccess_emote, (not MeToo_options.companionSuccess_useTarget) and "player" or nil )
+					MeToo.DoEmote( MeToo_options.companionSuccess_emote, (not MeToo_options.companionSuccess_useTarget) and "player" or nil )
 				end
 			else
 				--MeToo.Print( "Pets are the same" )
 			end
 		else
 			if( MeToo_options.companionFailure_doEmote and strlen( MeToo_options.companionFailure_emote ) > 0 ) then
-				DoEmote( MeToo_options.companionFailure_emote, (not MeToo_options.companionFailure_useTarget) and "player" or nil )
+				MeToo.DoEmote( MeToo_options.companionFailure_emote, (not MeToo_options.companionFailure_useTarget) and "player" or nil )
 			end
 			MeToo.Print( "Pet name: "..petName )
 			MeToo_companionList[time()] = petName
@@ -162,7 +170,7 @@ function MeToo.MountUp()
 
 		if( isUsable ) then
 			if( MeToo_options.mountSuccess_doEmote and strlen( MeToo_options.mountSuccess_emote ) > 0 ) then
-				DoEmote( MeToo_options.mountSuccess_emote, MeToo_options.mountSuccess_useTarget and "target" or "player" )
+				MeToo.DoEmote( MeToo_options.mountSuccess_emote, MeToo_options.mountSuccess_useTarget and "target" or "player" )
 			end
 			if( not IsFlying() ) then  -- only do this if you are NOT flying...
 				C_MountJournal.SummonByID( mountSpell )
@@ -171,7 +179,7 @@ function MeToo.MountUp()
 			end
 		else
 			if( MeToo_options.mountFailure_doEmote and strlen( MeToo_options.mountFailure_emote ) > 0 ) then
-				DoEmote( MeToo_options.mountFailure_emote, MeToo_options.mountFailure_useTarget and "target" or "player" )
+				MeToo.DoEmote( MeToo_options.mountFailure_emote, MeToo_options.mountFailure_useTarget and "target" or "player" )
 			end
 			MeToo_mountList[time()] = mountLink
 		end
