@@ -95,6 +95,7 @@ function MeToo.DoEmote( emote, target )
 	end
 end
 function MeToo.PerformMatch()
+	if InCombatLockdown() then return end
 	if( UnitIsBattlePet( "target" ) ) then  -- target is battle pet
 		speciesID = UnitBattlePetSpeciesID( "target" )
 		petType = UnitBattlePetType( "target" )
