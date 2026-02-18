@@ -143,7 +143,7 @@ function MeToo.PerformMatch()
 			MeToo.Print( "Pet name: "..petName )
 			MeToo_companionList[time()] = petName
 		end
-	elseif UnitGUID("target") ~= UnitGUID("player") then -- Target is not a pet or yourself.
+	elseif issecretvalue(UnitGUID("target")) or UnitGUID("target") ~= UnitGUID("player") then -- Target is not a pet or yourself.
 		MeToo.MountUp()
 	end
 end
