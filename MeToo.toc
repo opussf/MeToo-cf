@@ -1,9 +1,9 @@
 ## Title: MeToo
 ## Interface: 120100
-## Notes: Summon the same pet or mount as target player. (v1.7.10)
+## Notes: Summon the same pet or mount as target player. (v1.7.11)
 ## Author: opussf
 ## X-Credits: Soulshine and Lurkindevil for helping flush out the idea, testing, and getting this going.
-## Version: 1.7.10
+## Version: 1.7.11
 ## Description: Summon the same pet or mount as target player.
 ## SavedVariables: MeToo_options MeToo_mountList MeToo_companionList
 ## SavedVariablesPerCharacter:

@@ -78,6 +78,9 @@ end
 function MeToo.GetMountID( unit )
 	-- return the current mount ID...
 	-- match this against the mounts you know.
+	if not pcall( C_UnitAuras.GetAuraDataByIndex, "player", 1 ) then
+		return  -- guard against tainted code
+	end
 	for an=1,40 do  -- scan ALL of the auras...  :(
 		auraData = C_UnitAuras.GetAuraDataByIndex( unit, an )
 		if( auraData and MeToo.mountSpells[auraData.spellId] ) then
